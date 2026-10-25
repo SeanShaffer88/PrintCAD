@@ -1,0 +1,34 @@
+[package]
+name = "printcad"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+authors = ["Sean Shaffer"]
+description = "PrintCAD Lite — place simple 3D shapes, arrange them in millimetres, and export an STL file for 3D printing."
+license = "MIT"
+keywords = ["windows", "3d-printing", "stl", "cad", "mesh"]
+categories = ["gui"]
+
+[lib]
+name = "printcad"
+path = "src/lib.rs"
+
+[[bin]]
+name = "printcad"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+egui = { version = "0.33", default-features = false, features = ["default_fonts"] }
+# Renderer: glow (OpenGL), deliberately NOT wgpu — see DECISIONS.md.
+eframe = { version = "0.33", default-features = false, features = ["default_fonts", "glow", "accesskit"] }
+
+[target.'cfg(not(windows))'.dependencies]
+eframe = { version = "0.33", default-features = false, features = ["default_fonts", "glow", "accesskit", "x11"] }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
